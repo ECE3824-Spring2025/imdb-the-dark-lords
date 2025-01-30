@@ -1,26 +1,33 @@
-from flask import Flask, render_template, url_for, request
+# app.py
+from flask import Flask, render_template, request
+import movie_data
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST','GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index_func():
+    genre = request.args.get('genre')  # 'comedy', 'drama', 'action', or None
+    rating_data = None
+    likes_data = None
 
-    data = ''
-    # check for request data through GET method
-    if request.method == 'GET':
+    if genre == 'comedy':
+        rating_data = movie_data.sorted_ListWithRatingComedy_NoRepeats
+        likes_data  = movie_data.sorted_ListWithLikesComedy_NoRepeats
 
-        # evalate the choices 
-        genre = request.args.get('genre')
-        if      genre == 'comedy':
-            data = 'SEND COMEDY LIST'
+    elif genre == 'drama':
+        rating_data = movie_data.sorted_ListWithRatingDrama_NoRepeats
+        likes_data  = movie_data.sorted_ListWithLikesDrama_NoRepeats
 
-        elif    genre == 'drama':
-            data = 'SEND DRAMA LIST'
-            
-        elif    genre == 'action':
-            data = 'SEND ACTION LIST'
+    elif genre == 'action':
+        rating_data = movie_data.sorted_ListWithRatingAction_NoRepeats
+        likes_data  = movie_data.sorted_ListWithLikesAction_NoRepeats
 
-        return render_template("index.html",type = data)
+    return render_template(
+        "index.html", 
+        genre=genre, 
+        rating_data=rating_data, 
+        likes_data=likes_data
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

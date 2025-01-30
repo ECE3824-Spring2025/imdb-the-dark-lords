@@ -1,27 +1,96 @@
 <!doctype html>
-
 <html>
 
-    <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-        <title> Dark Lord Dungeon </title>
-    </head>
+<head>
+    <title>Dark Lord Dungeon</title>
+    <style>
+        /* 1) Center everything in the body */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* center horizontally */
+            justify-content: flex-start;
+            margin: 0;
+            padding: 1rem;
+            font-family: sans-serif;
+            /* optional nicer font */
+            text-align: center;
+            /* text will be centered */
+        }
 
-    <body>
-        <h1> Dark Lord Dungeon </h1>
-    </body>
+        h1,
+        h2,
+        h3 {
+            margin: 0.5rem 0;
+        }
 
-    <body>
-        <h2> GENRE: {{ type }} </h2>
-    </body>
+        /* 2) Two-column container for the lists */
+        .lists-container {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
 
+        /* 3) Remove default bullets and extra spacing from <ul> */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 4) Optional: center text in the lists themselves (if desired) */
+        /* 
+      .lists-container li {
+        text-align: center;
+      }
+    */
+    </style>
+</head>
+
+<body>
+    <h1>Dark Lord Dungeon</h1>
+
+    <h2>GENRE: {{ genre if genre else "None selected" }}</h2>
+
+    <!-- Genre selection form -->
     <form method="GET" action="#">
-        <select name="genre" id="genre" >
-            <option value="comedy"> comedy </option>
-            <option value="drama"> drama </option>
-            <option value="action"> action </option>
+        <select name="genre" id="genre">
+            <option value="comedy" {% if genre=='comedy' %}selected{% endif %}>comedy</option>
+            <option value="drama" {% if genre=='drama' %}selected{% endif %}>drama</option>
+            <option value="action" {% if genre=='action' %}selected{% endif %}>action</option>
         </select>
-        <input type="submit">
+        <input type="submit" value="Submit">
     </form>
+
+    <!-- If we have rating or likes data, display them in side-by-side divs -->
+    {% if rating_data or likes_data %}
+    <div class="lists-container">
+        {% if rating_data %}
+        <div>
+            <h3>Ratings List</h3>
+            <ul>
+                {% for movie in rating_data %}
+                <li>{{ movie.name }} — Rating: {{ movie.rating }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% if likes_data %}
+        <div>
+            <h3>Votes List</h3>
+            <ul>
+                {% for movie in likes_data %}
+                <li>{{ movie.name }} — Votes: {{ movie.votes }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>No genre selected or no data to display.</p>
+    {% endif %}
+</body>
 
 </html>
