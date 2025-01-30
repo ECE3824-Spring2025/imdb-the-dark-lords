@@ -1,8 +1,8 @@
 from flask import Flask, render_template, url_for, request
 
-app = Flask(__name__)
+app = Flask(__name__) # definng flask app
 
-@app.route('/', methods=['POST','GET'])
+@app.route('/', methods=['POST','GET']) 
 def index_func():
 
     data = ''

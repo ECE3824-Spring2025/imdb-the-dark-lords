@@ -1,22 +1,29 @@
-<!doctype html>
 
+
+<!doctype html>
 <html>
 
+    <!--Website Title-->
     <head>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-        <title> Dark Lord Dungeon </title>
+        <title> IMDB Dark Lord Dungeon </title>
     </head>
 
     <body>
-        <h1> Dark Lord Dungeon </h1>
-    </body>
+        <div class="banner">
+            <h1> IMDB </h1> <!--header text-->
 
-    <body>
-        <h2> GENRE: {{ type }} </h2>
-    </body>
+        </div>
 
+        <!--Text-->
+            <h1> The Dark Lord Dungeon </h1> <!--header text-->
+
+        <h2> GENRE: {{ type }} </h2> <!--subheader text-->
+
+    <!--FORM FOR DROPDOWN-->
     <form method="GET" action="#">
         <select name="genre" id="genre" >
+            <option  value="none" selected hidden disabled>select a genre</option>
             <option value="comedy"> comedy </option>
             <option value="drama"> drama </option>
             <option value="action"> action </option>
@@ -24,4 +31,12 @@
         <input type="submit">
     </form>
 
-</html>
+    <h3> top 10 by rating </h3> <!-- text-->
+    <h4> top 10 by vote </h4> <!-- text-->
+    <div class="square1"> </div>
+    <div class="square2"> </div>
+
+
+
+    </body>
+</html> 
