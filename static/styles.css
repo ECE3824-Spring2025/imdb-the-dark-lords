@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'outfit';
-    src: url('static/outfit/Outfit-ExtraBold.ttf');
+    src: 'C:\Users\Rayne\Desktop\myproject\imdb-the-dark-lords\static\outfit\Outfit-ExtraBold.ttf';
 }
 
 body {
@@ -84,8 +84,8 @@ form {
 
 
 .square1 {
-    height: 100px;
-    width: 100px;
+    height: 400px;
+    width: 300px;
     background-color: white;
     position: absolute;
     left: 150px;
@@ -100,11 +100,11 @@ form {
 }
 
 .square2 {
-    height: 100px;
-    width: 100px;
+    height: 400px;
+    width: 300px;
     background-color: white;
     position: absolute;
-    left: 300px;
+    left: 500px;
     top: 200px;
     border: 2px solid #58504A;
     border-radius: 5px;
