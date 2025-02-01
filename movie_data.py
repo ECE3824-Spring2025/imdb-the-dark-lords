@@ -63,26 +63,3 @@ ListWithLikesComedy=[{"id": "tt7131622", "name": "Once Upon a Time... in Hollywo
 {"id": "tt18259086", "name": "Sonic the Hedgehog 3", "votes": "28K"}, 
 {"id": "tt21823606", "name": "A Real Pain", "votes": "29K"}, 
 {"id": "tt20221436", "name": "Emilia Pérez", "votes": "32K"}]
-
-
-
-
-# Deduplicate and sort by rating for the "rating" lists:
-ListWithRatingDrama_NoRepeats = {m['id']: m for m in ListWithRatingDrama}.values()
-sorted_ListWithRatingDrama_NoRepeats = sorted(ListWithRatingDrama_NoRepeats, key=lambda x: x['rating'], reverse=True)
-
-ListWithRatingAction_NoRepeats = {m['id']: m for m in ListWithRatingAction}.values()
-sorted_ListWithRatingAction_NoRepeats = sorted(ListWithRatingAction_NoRepeats, key=lambda x: x['rating'], reverse=True)
-
-ListWithRatingComedy_NoRepeats = {m['id']: m for m in ListWithRatingComedy}.values()
-sorted_ListWithRatingComedy_NoRepeats = sorted(ListWithRatingComedy_NoRepeats, key=lambda x: x['rating'], reverse=True)
-
-# Deduplicate and sort by votes for the "likes" lists:
-ListWithLikesDrama_NoRepeats = {m['id']: m for m in ListWithLikesDrama}.values()
-sorted_ListWithLikesDrama_NoRepeats = sorted(ListWithLikesDrama_NoRepeats, key=lambda x: x['votes'], reverse=True)
-
-ListWithLikesAction_NoRepeats = {m['id']: m for m in ListWithLikesAction}.values()
-sorted_ListWithLikesAction_NoRepeats = sorted(ListWithLikesAction_NoRepeats, key=lambda x: x['votes'], reverse=True)
-
-ListWithLikesComedy_NoRepeats = {m['id']: m for m in ListWithLikesComedy}.values()
-sorted_ListWithLikesComedy_NoRepeats = sorted(ListWithLikesComedy_NoRepeats, key=lambda x: x['votes'], reverse=True)

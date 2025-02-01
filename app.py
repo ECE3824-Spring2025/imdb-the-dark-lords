@@ -1,6 +1,6 @@
 # app.py
 from flask import Flask, render_template, request
-import movie_data
+import sort_data
 
 app = Flask(__name__)
 
@@ -11,16 +11,16 @@ def index_func():
     likes_data = None
 
     if genre == 'comedy':
-        rating_data = movie_data.sorted_ListWithRatingComedy_NoRepeats
-        likes_data  = movie_data.sorted_ListWithLikesComedy_NoRepeats
+        rating_data = sort_data.sorted_ListWithRatingComedy_NoRepeats
+        likes_data  = sort_data.sorted_ListWithLikesComedy_NoRepeats
 
     elif genre == 'drama':
-        rating_data = movie_data.sorted_ListWithRatingDrama_NoRepeats
-        likes_data  = movie_data.sorted_ListWithLikesDrama_NoRepeats
+        rating_data = sort_data.sorted_ListWithRatingDrama_NoRepeats
+        likes_data  = sort_data.sorted_ListWithLikesDrama_NoRepeats
 
     elif genre == 'action':
-        rating_data = movie_data.sorted_ListWithRatingAction_NoRepeats
-        likes_data  = movie_data.sorted_ListWithLikesAction_NoRepeats
+        rating_data = sort_data.sorted_ListWithRatingAction_NoRepeats
+        likes_data  = sort_data.sorted_ListWithLikesAction_NoRepeats
 
     return render_template(
         "index.html", 
