@@ -111,3 +111,7 @@ form {
     justify-content: center;
     text-align: center;
 }
+
+ul {
+    list-style-type: none;
+}
