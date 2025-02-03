@@ -6,6 +6,7 @@
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title> IMDB Dark Lord Dungeon </title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -41,7 +42,8 @@
                 <h2>Ratings List</h2>
                 <ul>
                     {% for movie in rating_data %}
-                    <li>{{ movie.name }} — Rating: {{ movie.rating }}</li>
+                    <li>{{ movie.name }} — Rating: {{ movie.rating }} <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">Add to Favorites</button> </li>
+                    
                     {% endfor %}
                 </ul>
             </div>
@@ -59,13 +61,76 @@
             <h2>Voting list</h2>
             <ul>
                 {% for movie in likes_data %}
-                <li>{{ movie.name }} — Votes: {{ movie.votes }}</li>
+                <li>{{ movie.name }} — Votes: {{ movie.votes }}  <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-votes="{{ movie.votes }}">Add to Favorites</button>
+                </li>
                 {% endfor %}
             </ul>
         </div>
         {% endif %}
 
     </div>
+    
+    <!-- square 3-->
+    <div class="square3">
+        <h2>Favorites List</h2>
+        <ul id="favorites-list">
+            {% if favs_data %}
+                {% for movie in favs_data %}
+                <li>
+                    {{movie.name}} - Rating: {{movie.rating }}
+                    <button class="remove-favorite" data-id="{{ movie.id }}">Remove</button>
+                </li>
+                {% endfor %}
+            {% else %}
+            <li> id="no-favs">No favorites added yet.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.add-favorite').click(function() {
+                var movieData = {
+                    id: $(this).data('id'),
+                    name: $(this).data('name'),
+                    rating: $(this).data('rating') || $(this).data('votes')
+                };
+                $.ajax({
+                    url: '/add_favorite',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(movieData),
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#no-favorites').remove();
+                            $('#favorites-list').append('<li>' + movieData.name + ' - Rating: ' + movieData.rating + 
+                                ' <button class="remove-favorite" data-id="' + movieData.id + '">Remove</button></li>');
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '.remove-favorite', function() {
+                var movieId = $(this).data('id');
+                var listItem = $(this).parent();
+                $.ajax({
+                    url: '/remove_favorite',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({id: movieId}),
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            listItem.remove();
+                            if ($('#favorites-list li').length === 0) {
+                    $('#favorites-list').append('<li id="no-favorites">No favorites added yet.</li>'); }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</div>
 
 
 

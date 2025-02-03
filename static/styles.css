@@ -111,3 +111,19 @@ form {
     justify-content: center;
     text-align: center;
 }
+
+.square3 {
+    height: 400px;
+    width: 300px;
+    background-color: white;
+    position: absolute;
+    left: 1200px;
+    top: 200px;
+    border: 2px solid #58504A;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
