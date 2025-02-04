@@ -30,62 +30,89 @@
         <input type="submit">
     </form>
 
-    <h3> top 10 by rating </h3> <!-- text-->
-    <h4> top 10 by vote </h4> <!-- text-->
+    
+    <!--<h3> top 10 by rating </h3> <!-- text-->
+    <!--<h4> top 10 by vote </h4> <!-- text-->
+    
 
     <!-- square 1-->
-    <div class="square1">
-        {% if rating_data or likes_data %}
-        <div class="lists-container">
-            {% if rating_data %}
-            <div>
-                <h2>Ratings List</h2>
-                <ul>
-                    {% for movie in rating_data %}
-                    <li>{{ movie.name }} — Rating: {{ movie.rating }} <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">Add to Favorites</button> </li>
-                    
-                    {% endfor %}
-                </ul>
+    <div class="squares-header">
+        <h4>Top 10 by Rating</h4>
+        <div class="square1">
+            <div class="header-container">
+                <h5> Movie Title </h5> <!-- text-->
+                <h6> Rating </h6> <!-- text-->
             </div>
+            {% if rating_data or likes_data %}
+            <div class="lists-container">
+                {% if rating_data %}
+                <div>
+                    <ul>
+                        {% for movie in rating_data %}
+                        <li class ="movie-item">                       
+                            <span class="movie-name">{{ movie.name }}</span>
+                            <span class="movie-rating"># {{ movie.rating }}</span>                       
+                            <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">Add to Favorites</button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <p>No genre selected or no data to display.</p>
             {% endif %}
         </div>
-        {% else %}
-        <p>No genre selected or no data to display.</p>
-        {% endif %}
     </div>
 
-    <!-- square 2-->
-    <div class="square2">
-        {% if likes_data %}
-        <div>
-            <h2>Voting list</h2>
-            <ul>
-                {% for movie in likes_data %}
-                <li>{{ movie.name }} — Votes: {{ movie.votes }}  <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-votes="{{ movie.votes }}">Add to Favorites</button>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+    <div class="square-header">
+        <h3>Top 10 by Votes</h3>
+        <!-- square 2-->
+        <div class="square2">
+            <div class="header-container">
+                <h5> Movie Title </h5> <!-- text-->
+                <h6> Votes </h6> <!-- text-->
+            </div>
+            {% if likes_data %}
+            <div class="lists-container">
+                <div>
+                    <ul>
+                        {% for movie in likes_data %}
+                        <li class="movie-item">
+                            <span class="movie-name">{{ movie.name }}</span>
+                            <span class="movie-votes"># {{ movie.votes }}</span>
+                            <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-votes="{{ movie.votes }}">Add to Favorites</button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% else %}
+        <p>No data to display.</p>
         {% endif %}
-
     </div>
     
-    <!-- square 3-->
-    <div class="square3">
-        <h2>Favorites List</h2>
-        <ul id="favorites-list">
-            {% if favs_data %}
+    <div class="square-header">
+        <!--<h4>Favorites List</h4>*/-->
+        <!-- square 3-->
+        <div class="square3">
+            <h2>Favorites List</h2>
+            <ul id="favorites-list">
+                {% if favs_data %}
                 {% for movie in favs_data %}
                 <li>
                     {{movie.name}} - Rating: {{movie.rating }}
                     <button class="remove-favorite" data-id="{{ movie.id }}">Remove</button>
                 </li>
                 {% endfor %}
-            {% else %}
-            <li> id="no-favs">No favorites added yet.</li>
-            {% endif %}
-        </ul>
+                {% else %}
+                <li> id="no-favs">No favorites added yet.</li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
+
+
 
     <script>
         $(document).ready(function() {
