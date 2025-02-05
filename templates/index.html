@@ -49,7 +49,8 @@
                 <div>
                     <ul>
                         {% for movie in rating_data %}
-                        <li class ="movie-item">                       
+                        <li class ="movie-item">     
+                            <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">              
                             <span class="movie-name">{{ movie.name }}</span>
                             <span class="movie-rating"># {{ movie.rating }}</span>                       
                             <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">Add to Favorites</button>
@@ -79,6 +80,7 @@
                     <ul>
                         {% for movie in likes_data %}
                         <li class="movie-item">
+                            <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
                             <span class="movie-name">{{ movie.name }}</span>
                             <span class="movie-votes"># {{ movie.votes }}</span>
                             <button class="add-favorite" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-votes="{{ movie.votes }}">Add to Favorites</button>

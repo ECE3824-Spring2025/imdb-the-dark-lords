@@ -1,15 +1,24 @@
 # app.py
 from flask import Flask, render_template, request, jsonify
+import requests
 import sort_data
 import favs_list
 
 app = Flask(__name__)
 
+OMDB_API_KEY = 'e6d88f23'
+
+def get_movie_poster(imdb_id):
+    url = f'http://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}'
+    response = requests.get(url)
+    data = response.json()
+    return data.get('Poster', 'https://www.omdbapi.com/?i=tt3896198&apikey=e6d88f23')
+
 @app.route('/', methods=['GET', 'POST'])
 def index_func():
     genre = request.args.get('genre')  # 'comedy', 'drama', 'action', or None
-    rating_data = None
-    likes_data = None
+    rating_data = []
+    likes_data = []
     favs_data = favs_list.fav_movies
 
     if genre == 'comedy':
@@ -23,6 +32,12 @@ def index_func():
     elif genre == 'action':
         rating_data = sort_data.sorted_ListWithRatingAction_NoRepeats
         likes_data  = sort_data.sorted_ListWithLikesAction_NoRepeats
+
+    for movie in rating_data:
+        movie['poster'] = get_movie_poster(movie['id'])
+
+    for movie in likes_data:
+        movie['poster'] = get_movie_poster(movie['id'])
 
     return render_template(
         "index.html", 
