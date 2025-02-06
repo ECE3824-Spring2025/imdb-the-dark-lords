@@ -29,7 +29,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/zacarylouis/COMP3_SYNC_/imdb-the-dark-lords/.venv"
+set -gx VIRTUAL_ENV "/Users/zacarylouis/COMP3/imdb-the-dark-lords/.venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

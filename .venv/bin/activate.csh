@@ -8,7 +8,7 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV "/Users/zacarylouis/COMP3_SYNC_/imdb-the-dark-lords/.venv"
+setenv VIRTUAL_ENV "/Users/zacarylouis/COMP3/imdb-the-dark-lords/.venv"
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"
