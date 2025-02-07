@@ -1,2 +1,3 @@
 # imdb-the-dark-lords
-project 1
+
+Phase 1 of website database project.
