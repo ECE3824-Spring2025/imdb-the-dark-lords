@@ -1,146 +1,133 @@
 <!doctype html>
 <html>
 
-<!--Website Title-->
-
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title> IMDB Dark Lord Dungeon </title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://kit.fontawesome.com/25dad2b166.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>IMDB Dark Lord Dungeon</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://kit.fontawesome.com/25dad2b166.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div class="banner">
-        <h1> IMDB </h1> <!--header text-->
+  <div class="banner">
+    <h1>IMDB</h1>
+  </div>
 
-    </div>
+  <h1>The Dark Lord Dungeon</h1>
+  <h2>GENRE: {{ genre }}</h2>
 
-    <!--Text-->
-    <h1> The Dark Lord Dungeon </h1> <!--header text-->
-    <h2> GENRE: {{ genre }} </h2> <!--subheader text-->
+  <form method="GET" action="#">
+    <select name="genre" id="genre">
+      <option value="none" selected hidden disabled>select a genre</option>
+      <option value="comedy"> comedy </option>
+      <option value="drama"> drama </option>
+      <option value="action"> action </option>
+    </select>
+    <input type="submit">
+  </form>
 
-    <!--FORM FOR DROPDOWN-->
-    <form method="GET" action="#">
-        <select name="genre" id="genre">
-            <option value="none" selected hidden disabled>select a genre</option>
-            <option value="comedy"> comedy </option>
-            <option value="drama"> drama </option>
-            <option value="action"> action </option>
-        </select>
-        <input type="submit">
-    </form>
-    
-
-    <!-- square 1-->
-    <div class="squares-header">
-        <h3 id="Rating">Top 10 by Rating</h3>
-        <div class="square1">
-            {% if rating_data or likes_data %}
-            <div class="lists-container">
-                {% if rating_data %}
-                <div class="movie-list">
-                    <ul>
-                        {% for movie in rating_data %}
-                        <li class ="movie-item" >   
-                            <div class="movie-container">  
-                                <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
-                                <div class ="movie-info">             
-                                    <div class="movie-name">{{ movie.name }}</div>
-                                    <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.rating }}</div>                       
-                                    <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}"><i class="far fa-heart"></i></button>
-                                </div> 
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+  <div class="squares-container">
+        <h3 id="Rating">Top 10 by Rating
+            <div class="square1">
+            {% if rating_data %}
+                <div class="lists-container">
+                    <div class="movie-list">
+                        <ul>
+                            {% for movie in rating_data %}
+                            <li class="movie-item">
+                                <div class="movie-container">
+                                    <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                                    <div class="movie-info">
+                                        <div class="movie-name">{{ movie.name }}</div>
+                                        <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.rating }}</div>
+                                        <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
+                {% else %}
+            <p>No data to display.</p>
+            {% endif %}
+            </div>
+        </h3>
+
+        <h3 id="Voting">Top 10 by Votes
+            <div class="square2">
+                {% if likes_data %}
+                <div class="lists-container">
+                    <div class="movie-list">
+                        <ul>
+                        {% for movie in likes_data %}
+                            <li class="movie-item">
+                                <div class="movie-container">
+                                    <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                                    <div class="movie-info">
+                                        <div class="movie-name">{{ movie.name }}</div>
+                                        <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.votes }}</div>
+                                        <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% else %}
+                <p>No data to display.</p>
                 {% endif %}
             </div>
-            {% else %}
-            <p>No genre selected or no data to display.</p>
-            {% endif %}
-        </div>
-    </div>
+        </h3>
 
-    <div class="square-header">
-        <h3 id="Voting">Top 10 by Votes</h3>
-        <!-- square 2-->
-        <div class="square2">
-            {% if likes_data %}
-            <div class="lists-container">
-                <div class="movie-list">
-                    <ul>
-                        {% for movie in likes_data %}
-                        <li class="movie-item">
-                            <div class="movie-container">
-                                <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
-                                <div class ="movie-info">
-                                    <div class="movie-name">{{ movie.name }}</div>
-                                    <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.votes }}</div>
-                                    <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}"><i class="far fa-heart"></i></button>
-                                </div>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            {% else %}
-        <p>No data to display.</p>
-        {% endif %}
-    </div>
-    
-    <div class="square-header">
-        <!--<h4>Favorites List</h4>*/-->
-        <!-- square 3-->
-        <h3 id="Favorite">Favorite List</h3>
-        <div class="square3">   
-            <ul id="favorites-list">
+        <h3 id="Favorite">Favorite List
+            <div class="square3">
+                <ul id="favorites-list">
                 {% if favs_data %}
                 {% for movie in favs_data %}
-                <li class="movie-item">
-                    <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
-                        <div class ="movie-info">
-                            <div class="movie-name">{{movie.name}} - Rating: {{movie.rating }}</div>
-                            <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.votes }}</div>
-                            <button class="remove-favorite" data-id="{{ movie.id }}">Remove</button>
+                    <li class="movie-item">
+                        <div class="movie-container">
+                            <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                            <div class="movie-info">
+                                <div class="movie-name">{{movie.name}}</div>
+                                <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.rating }}</div>
+                                <button class="remove-favorite" data-id="{{ movie.id }}">Remove</button>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                {% endfor %}
-                {% else %}
-                <li> id="no-favs">No favorites added yet.</li>
-                {% endif %}
-            </ul>
-        </div>
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <li id="no-favs">No favorites added yet.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </h3>
     </div>
 
+  <script>
+    $(document).ready(function () {
+      $('.add-favorite').click(function (e) {
+        e.preventDefault();
+        var $button = $(this);
+        $button.toggleClass('liked');
+        $button.find('i').toggleClass('far fas');
 
-
-    <script>
-        $(document).ready(function() {
-            $('.add-favorite').click(function(e) {
-                e.preventDefault();
-                var $button = $(this);
-                $button.toggleClass('liked');
-                $button.find('i').toggleClass('far fas');
-
-                var movieData = {
-                    id: $button.data('id'),
-                    name: $button.data('name'),
-                    rating: $button.data('rating') || $button.data('votes')
-                };
-                $.ajax({
-                    url: '/add_favorite',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(movieData),
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $('#no-favorites').remove();
-                            $('#favorites-list').append(`
+        var movieData = {
+          id: $button.data('id'),
+          name: $button.data('name'),
+          rating: $button.data('rating') || $button.data('votes'),
+          poster: $button.closest('.movie-container').find('img').attr('src')
+        };
+        $.ajax({
+          url: '/add_favorite',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(movieData),
+          success: function (response) {
+            if (response.status === 'success') {
+              $('#no-favorites').remove();
+              $('#favorites-list').append(`
                                 <li class="movie-item">
                                     <div class="movie-container">
                                         <img src="${movieData.poster}" alt="${movieData.name} poster" width="150">
@@ -151,35 +138,32 @@
                                         </div>
                                     </div>
                                 </li>
-                            `);                
-                        }
-                    }
-                });
-            });
-
-            $(document).on('click', '.remove-favorite', function() {
-                var movieId = $(this).data('id');
-                var listItem = $(this).parent();
-                $.ajax({
-                    url: '/remove_favorite',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({id: movieId}),
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            listItem.remove();
-                            if ($('#favorites-list li').length === 0) {
-                    $('#favorites-list').append('<li id="no-favorites">No favorites added yet.</li>'); }
-                        }
-                    }
-                });
-            });
+                            `);
+            }
+          }
         });
-    </script>
+      });
 
-</div>
-
-
+      $(document).on('click', '.remove-favorite', function () {
+        var movieId = $(this).data('id');
+        var listItem = $(this).parent();
+        $.ajax({
+          url: '/remove_favorite',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ id: movieId }),
+          success: function (response) {
+            if (response.status === 'success') {
+              listItem.remove();
+              if ($('#favorites-list li').length === 0) {
+                $('#favorites-list').append('<li id="no-favorites">No favorites added yet.</li>');
+              }
+            }
+          }
+        });
+      });
+    });
+  </script>
 
 </body>
 
