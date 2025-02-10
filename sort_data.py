@@ -10,12 +10,21 @@ sorted_ListWithRatingAction_NoRepeats = sorted(ListWithRatingAction_NoRepeats, k
 ListWithRatingComedy_NoRepeats = {m['id']: m for m in movie_data.ListWithRatingComedy}.values()
 sorted_ListWithRatingComedy_NoRepeats = sorted(ListWithRatingComedy_NoRepeats, key=lambda x: x['rating'], reverse=True)
 
-# Deduplicate and sort by votes for the "likes" lists:
+# Function to convert votes to an integer value
+def parse_votes(votes_str):
+    if 'M' in votes_str:
+        return int(float(votes_str.replace('M', '')) * 1_000_000)
+    elif 'K' in votes_str:
+        return int(float(votes_str.replace('K', '')) * 1_000)
+    return int(votes_str)
+
+# Deduplicate and sort by votes
 ListWithLikesDrama_NoRepeats = {m['id']: m for m in movie_data.ListWithLikesDrama}.values()
-sorted_ListWithLikesDrama_NoRepeats = sorted(ListWithLikesDrama_NoRepeats, key=lambda x: x['votes'], reverse=True)
+sorted_ListWithLikesDrama_NoRepeats = sorted(ListWithLikesDrama_NoRepeats, key=lambda x: parse_votes(x['votes']), reverse=True)
 
 ListWithLikesAction_NoRepeats = {m['id']: m for m in movie_data.ListWithLikesAction}.values()
-sorted_ListWithLikesAction_NoRepeats = sorted(ListWithLikesAction_NoRepeats, key=lambda x: x['votes'], reverse=True)
+sorted_ListWithLikesAction_NoRepeats = sorted(ListWithLikesAction_NoRepeats, key=lambda x: parse_votes(x['votes']), reverse=True)
 
 ListWithLikesComedy_NoRepeats = {m['id']: m for m in movie_data.ListWithLikesComedy}.values()
-sorted_ListWithLikesComedy_NoRepeats = sorted(ListWithLikesComedy_NoRepeats, key=lambda x: x['votes'], reverse=True)
+sorted_ListWithLikesComedy_NoRepeats = sorted(ListWithLikesComedy_NoRepeats, key=lambda x: parse_votes(x['votes']), reverse=True)
+
