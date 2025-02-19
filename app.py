@@ -4,7 +4,7 @@ import requests
 import sort_data
 import favs_list
 
-app = Flask(__name__)
+app = Flask(__name__) # definng flask app
 
 OMDB_API_KEY = 'e6d88f23'
 
