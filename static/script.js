@@ -1,6 +1,10 @@
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function MovieList() {
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [modalMovie, setModalMovie] = useState(null);
+
+  // Intersection Observer for fade-out effect
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -27,51 +31,64 @@ function MovieList() {
     };
   }, []);
 
+  // Function to toggle dropdown visibility
+  const toggleDropdown = () => {
+    const dropdown = document.getElementById("genreDropdown");
+    dropdown.classList.toggle("show");
+  };
+
+  // Function to handle genre selection
+  const selectGenre = (genre) => {
+    setSelectedGenre(genre);
+    document.getElementById("dropdownButton").textContent = genre.charAt(0).toUpperCase() + genre.slice(1);
+    document.getElementById("genreDropdown").classList.remove("show");
+  };
+
+  // Handle modal open
+  const openModal = (movie) => {
+    setModalMovie(movie);
+  };
+
+  // Handle modal close
+  const closeModal = () => {
+    setModalMovie(null);
+  };
+
   return (
-    <div className="movie-list">
-      <div className="movie-item">
-        <img src="movie-poster.jpg" alt="Movie Poster" />
-        <h3>Movie Title</h3>
+    <div>
+      {/* Genre Dropdown */}
+      <div className="dropdown">
+        <button onClick={toggleDropdown} className="dropbtn" id="dropdownButton">Select Genre</button>
+        <div id="genreDropdown" className="dropdown-content">
+          <a href="#" onClick={() => selectGenre('action')}>Action</a>
+          <a href="#" onClick={() => selectGenre('comedy')}>Comedy</a>
+          <a href="#" onClick={() => selectGenre('drama')}>Drama</a>
+        </div>
       </div>
-      {/* Add more movie items */}
+
+      {/* Movie List */}
+      <div className="movie-list">
+        <div className="movie-item">
+          <img src="movie-poster.jpg" alt="Movie Poster" onClick={() => openModal({ title: 'Movie Title', rating: '5.5', poster: 'movie-poster.jpg' })} />
+          <h3 className="movie-name">Movie Title</h3>
+          <p className="movie-rating">5.5</p>
+        </div>
+        {/* Add more movie items here */}
+      </div>
+
+      {/* Movie Modal */}
+      {modalMovie && (
+        <div id="movie-modal" className="modal" style={{ display: 'block' }}>
+          <div className="modal-content">
+            <span id="close-modal" onClick={closeModal} className="close">&times;</span>
+            <h2>{modalMovie.title}</h2>
+            <img src={modalMovie.poster} alt="Movie Poster" />
+            <p>Rating: {modalMovie.rating}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default MovieList;
-
-function toggleDropdown() {
-    document.getElementById("genreDropdown").classList.toggle("show");
-}
-
-function selectGenre(genre) {
-    // Update button text
-    document.getElementById("dropdownButton").textContent = genre.charAt(0).toUpperCase() + genre.slice(1);
-
-    // Store the selected value in hidden input (so it gets submitted)
-    document.getElementById("selectedGenre").value = genre;
-
-    // Close dropdown after selection
-    document.getElementById("genreDropdown").classList.remove("show");
-}
-
-// Close dropdown if clicked outside
-window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn') && !event.target.closest('.dropdown-content')) {
-        document.getElementById("genreDropdown").classList.remove("show");
-    }
-};
-
-// Preserve selection after form submission
-document.addEventListener("DOMContentLoaded", function () {
-    const params = new URLSearchParams(window.location.search);
-    const selectedGenre = params.get("genre");
-
-    if (selectedGenre) {
-        document.getElementById("dropdownButton").textContent = selectedGenre.charAt(0).toUpperCase() + selectedGenre.slice(1);
-        document.getElementById("selectedGenre").value = selectedGenre;
-    }
-});
-
-
-

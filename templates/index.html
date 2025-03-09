@@ -33,6 +33,16 @@
         <input type="submit" value="Submit">
     </form>
 
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2 id="modal-movie-title"></h2>
+            <img id="modal-movie-poster" src="" alt="Movie Poster" width="200">
+            <p>Rating: <span id="modal-movie-rating"></span></p>
+        </div>
+    </div>
+    
+
     <div class="scroll-wrapper">
         <h3>Top 10 by Rating
         <div class="scroll-container">
@@ -105,6 +115,39 @@
     </div>
 
     <script>
+    document.querySelectorAll(".movie-item").forEach(item => {
+        const movieName = item.querySelector(".movie-name"); // Get the movie name element
+        const moviePoster = item.querySelector("img");
+
+        // Create overlay text element
+        const overlay = document.createElement("div");
+        overlay.classList.add("overlay-text");
+        overlay.textContent = movieName.textContent; // Set the movie name
+
+        // Wrap the image in a container if not already
+        let posterContainer = item.querySelector(".poster-container");
+        if (!posterContainer) {
+            posterContainer = document.createElement("div");
+            posterContainer.classList.add("poster-container");
+            moviePoster.parentNode.insertBefore(posterContainer, moviePoster);
+            posterContainer.appendChild(moviePoster);
+        }
+        
+        posterContainer.appendChild(overlay); // Add overlay inside the poster container
+
+        item.addEventListener("mouseenter", function () {
+            moviePoster.style.opacity = "0.5"; // Reduce opacity of poster
+            overlay.style.opacity = "1"; // Show movie name
+        });
+
+        item.addEventListener("mouseleave", function () {
+            moviePoster.style.opacity = "1"; // Reset opacity
+            overlay.style.opacity = "0"; // Hide movie name
+        });
+    });
+
+
+
         function toggleDropdown() {
             document.getElementById("genreDropdown").classList.toggle("show");
         }
