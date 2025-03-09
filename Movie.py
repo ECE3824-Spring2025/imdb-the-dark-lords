@@ -9,6 +9,6 @@ class Movie:
         self.genres = genres
         self.averageRating = averageRating
         self.numVotes = numVotes
-
+        self.poster = ''
     def __str__(self):
         return f"ID: {self.tconst}, English Title: {self.primaryTitle}, Original Title: {self.originalTitle}, R-rated: {self.isAdult}, Year: {self.startYear}, Duration: {self.runtimeMinutes} minutes, Genres: {self.genres}, Rating: {self.averageRating} ({self.numVotes} votes)"

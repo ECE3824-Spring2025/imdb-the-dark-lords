@@ -50,11 +50,11 @@
                 {% for movie in rating_data %}
                 <li class="movie-item">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150">
                         <div class="movie-info">
-                            <div class="movie-name">{{ movie.name }}</div>
-                            <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.rating }}</div>
-                            <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">
+                            <div class="movie-name">{{ movie.primaryTitle }}</div>
+                            <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.averageRating }}</div>
+                            <button class="add-favorite heart-button" data-id="{{ movie.tconst }}" data-name="{{ movie.primaryTitle }}" data-rating="{{ movie.averageRating }}">
                                 <i class="far fa-heart"></i>
                             </button>
                         </div>
@@ -72,11 +72,11 @@
                 {% for movie in likes_data %}
                 <li class="movie-item">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150">
                         <div class="movie-info">
-                            <div class="movie-name">{{ movie.name }}</div>
-                            <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.votes }}</div>
-                            <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">
+                            <div class="movie-name">{{ movie.primaryTitle }}</div>
+                            <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.numVotes }}</div>
+                            <button class="add-favorite heart-button" data-id="{{ movie.tconst }}" data-name="{{ movie.primaryTitle }}" data-rating="{{ movie.numVotes }}">
                                 <i class="far fa-heart"></i>
                             </button>
                         </div>
@@ -95,12 +95,12 @@
                 {% for movie in favs_data %}
                 <li class="movie-item" data-id="{{ movie.id }}">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150">
                         <div class="movie-info">
-                            <div class="movie-name">{{ movie.name }}</div>
+                            <div class="movie-name">{{ movie.primaryTitle }}</div>
                             <div class="movie-rating">
-                                <span class="star">&#9733;</span> {{ movie.votes }} 
-                                <span class="star">&#9733;</span> {{ movie.rating }}
+                                <span class="star">&#9733;</span> {{ movie.numVotes }} 
+                                <span class="star">&#9733;</span> {{ movie.averageRating }}
                             </div>
                             <button class="remove-favorite" data-id="{{ movie.id }}">Remove</button>
                         </div>
@@ -194,8 +194,9 @@
                     contentType: 'application/json',
                     data: JSON.stringify(movieData),
                     success: function (response) {
-                        if (response.status === 'success') {
+                        if (response.status === 'success' && response.append === true) {
                             $('#no-favs').remove();
+                            console.log(response.append);
                             $('#favorites-list').append(`
                                 <li class="movie-item">
                                     <div class="movie-container">

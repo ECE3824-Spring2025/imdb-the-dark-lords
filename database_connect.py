@@ -12,6 +12,7 @@ config = {
 
 link = mysql.connector.connect(**config)
 cursor = link.cursor()
+'''
 movies = []
 
 query = ("SELECT * FROM `database`" "ORDER BY `averageRating` DESC")
@@ -29,3 +30,4 @@ for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinute
 
 for movie in movies[-10:]:
     print(movie)
+'''

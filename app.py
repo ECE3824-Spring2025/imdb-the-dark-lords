@@ -1,9 +1,11 @@
 # app.py
 from flask import Flask, render_template, request, jsonify
 import requests
-import sort_data
-import favs_list
-
+#import sort_data
+#import favs_list
+from database_connect import cursor
+import Movie
+fav_movies = []
 app = Flask(__name__) # definng flask app
 
 OMDB_API_KEY = 'e6d88f23'
@@ -14,30 +16,88 @@ def get_movie_poster(imdb_id):
     data = response.json()
     return data.get('Poster', 'https://www.omdbapi.com/?i=tt3896198&apikey=e6d88f23')
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    movies = []
+    query = ("SELECT * FROM `database`" "ORDER BY `COL 10` DESC")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+        movies.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+    for movie in movies[:10]:
+        print(movie)
+
 @app.route('/', methods=['GET', 'POST'])
 def index_func():
     genre = request.args.get('genre')  # 'comedy', 'drama', 'action', or None
     rating_data = []
     likes_data = []
-    favs_data = favs_list.fav_movies
+    favs_data = []
+
+    #favs_data = [favs_list.fav_movies]
 
     if genre == 'comedy':
-        rating_data = sort_data.sorted_ListWithRatingComedy_NoRepeats
-        likes_data  = sort_data.sorted_ListWithLikesComedy_NoRepeats
+        movies_rating = []
+        movies_votes = []
+        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `COL 9`) > 0 ORDER BY `COL 10` DESC LIMIT 10")
+        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `COL 9`) > 0 ORDER BY `COL 11` DESC LIMIT 10")
+        cursor.execute(query_rating)
+        rows = cursor.fetchall()
+        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+            movies_rating.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+        cursor.execute(query_votes)
+        rows = cursor.fetchall()
+        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+            movies_votes.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+        rating_data = movies_rating
+        likes_data  = movies_votes
 
     elif genre == 'drama':
-        rating_data = sort_data.sorted_ListWithRatingDrama_NoRepeats
-        likes_data  = sort_data.sorted_ListWithLikesDrama_NoRepeats
+        movies_rating = []
+        movies_votes = []
+        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `COL 9`) > 0 ORDER BY `COL 10` DESC LIMIT 10")
+        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `COL 9`) > 0 ORDER BY `COL 11` DESC LIMIT 10")
+        cursor.execute(query_rating)
+        rows = cursor.fetchall()
+        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+            movies_rating.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+        cursor.execute(query_votes)
+        rows = cursor.fetchall()
+        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+            movies_votes.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+        rating_data = movies_rating
+        likes_data  = movies_votes
+
 
     elif genre == 'action':
-        rating_data = sort_data.sorted_ListWithRatingAction_NoRepeats
-        likes_data  = sort_data.sorted_ListWithLikesAction_NoRepeats
+        movies_rating = []
+        movies_votes = []
+        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `COL 9`) > 0 ORDER BY `COL 10` DESC LIMIT 10")
+        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `COL 9`) > 0 ORDER BY `COL 11` DESC LIMIT 10")
+        cursor.execute(query_rating)
+        rows = cursor.fetchall()
+        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+            movies_rating.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+        cursor.execute(query_votes)
+        rows = cursor.fetchall()
+        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+            movies_votes.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+        rating_data = movies_rating
+        likes_data  = movies_votes
 
     for movie in rating_data:
-        movie['poster'] = get_movie_poster(movie['id'])
+        movie.poster = get_movie_poster(movie.tconst)
 
     for movie in likes_data:
-        movie['poster'] = get_movie_poster(movie['id'])
+        movie.poster = get_movie_poster(movie.tconst)
 
     return render_template(
         "index.html", 
@@ -50,16 +110,17 @@ def index_func():
 @app.route('/add_favorite', methods=['POST'])
 def add_favorite():
     movie_data = request.json
-    if movie_data not in favs_list.fav_movies:
-        favs_list.fav_movies.append(movie_data)
-    return jsonify({"status": "success"})
+    current_movies = [m['id'] for m in fav_movies]
+    if not (movie_data['id'] in current_movies):
+        fav_movies.append(movie_data)
+        return jsonify({"status": "success","append": True})
+    return jsonify({"status": "success","append": False})
 
 @app.route('/remove_favorite', methods=['POST'])
 def remove_favorite():
     movie_id = request.json['id']
-    favs_list.fav_movies = [m for m in favs_list.fav_movies if m['id'] != movie_id]
+    fav_movies[:] = [m for m in fav_movies if m['id'] != movie_id]  # Modify list in-place
     return jsonify({"status": "success"})
-
 
 
 
