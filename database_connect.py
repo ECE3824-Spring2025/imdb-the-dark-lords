@@ -14,18 +14,20 @@ link = mysql.connector.connect(**config)
 cursor = link.cursor()
 movies = []
 
-query = ("SELECT * FROM `database`" "ORDER BY `averageRating` DESC")
+
+DramaRatingQuery = """SELECT * FROM `database` WHERE genres LIKE '%Drama%' ORDER BY averageRating DESC"""
 
 # if link.is_connected():
 #     print("✅ Successfully connected to the 'movies_data' database.")
 # else:
 #     print("❌ Connection failed.")
 
-cursor.execute(query)
+cursor.execute(DramaRatingQuery)
 rows = cursor.fetchall()
 
 for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
     movies.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
 
-for movie in movies[-10:]:
-    print(movie)
+for movie in movies[:10]:
+  print(movie)
+
