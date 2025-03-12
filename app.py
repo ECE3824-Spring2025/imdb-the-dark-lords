@@ -41,8 +41,8 @@ def index_func():
     if genre == 'comedy':
         movies_rating = []
         movies_votes = []
-        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `COL 9`) > 0 ORDER BY `COL 10` DESC LIMIT 10")
-        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `COL 9`) > 0 ORDER BY `COL 11` DESC LIMIT 10")
+        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `genres`) > 0 ORDER BY `averageRating` DESC LIMIT 10")
+        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `genres`) > 0 ORDER BY `numVotes` DESC LIMIT 10")
         cursor.execute(query_rating)
         rows = cursor.fetchall()
         for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
@@ -59,8 +59,8 @@ def index_func():
     elif genre == 'drama':
         movies_rating = []
         movies_votes = []
-        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `COL 9`) > 0 ORDER BY `COL 10` DESC LIMIT 10")
-        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `COL 9`) > 0 ORDER BY `COL 11` DESC LIMIT 10")
+        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `genres`) > 0 ORDER BY `averageRating` DESC LIMIT 10")
+        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `genres`) > 0 ORDER BY `numVotes` DESC LIMIT 10")
         cursor.execute(query_rating)
         rows = cursor.fetchall()
         for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
@@ -78,8 +78,8 @@ def index_func():
     elif genre == 'action':
         movies_rating = []
         movies_votes = []
-        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `COL 9`) > 0 ORDER BY `COL 10` DESC LIMIT 10")
-        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `COL 9`) > 0 ORDER BY `COL 11` DESC LIMIT 10")
+        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `genres`) > 0 ORDER BY `averageRating` DESC LIMIT 10")
+        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `genres`) > 0 ORDER BY `numVotes` DESC LIMIT 10")
         cursor.execute(query_rating)
         rows = cursor.fetchall()
         for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
