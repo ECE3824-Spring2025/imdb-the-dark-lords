@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function MovieList() {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [modalMovie, setModalMovie] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Intersection Observer for fade-out effect
   useEffect(() => {

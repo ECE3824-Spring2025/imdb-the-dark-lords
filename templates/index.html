@@ -50,7 +50,8 @@
                 {% for movie in rating_data %}
                 <li class="movie-item">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150">
+                        <!-- Make the entire Movie container clickable -->
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150"onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', poster: '{{ movie.poster }}' })">
                         <div class="movie-info">
                             <div class="movie-name">{{ movie.primaryTitle }}</div>
                             <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.averageRating }}</div>
@@ -72,7 +73,8 @@
                 {% for movie in likes_data %}
                 <li class="movie-item">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150">
+                        <!-- Make the entire Movie container clickable -->
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150" onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', poster: '{{ movie.poster }}' })">
                         <div class="movie-info">
                             <div class="movie-name">{{ movie.primaryTitle }}</div>
                             <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.numVotes }}</div>
@@ -95,6 +97,7 @@
                 {% for movie in favs_data %}
                 <li class="movie-item" data-id="{{ movie.id }}">
                     <div class="movie-container">
+                        <!-- Make the entire Movie container clickable -->
                         <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150">
                         <div class="movie-info">
                             <div class="movie-name">{{ movie.primaryTitle }}</div>
