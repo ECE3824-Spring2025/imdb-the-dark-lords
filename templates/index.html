@@ -33,15 +33,23 @@
         <input type="submit" value="Submit">
     </form>
 
-    <div id="movie-modal" class="modal">
+    <div id="movie-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span id="close-modal" class="close">&times;</span>
-            <h2 id="modal-movie-title"></h2>
-            <img id="modal-movie-poster" src="" alt="Movie Poster" width="200">
-            <p>Rating: <span id="modal-movie-rating"></span></p>
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-layout">
+                <img id="modal-movie-poster" src="" alt="Movie Poster" width="200">
+                <div class="modal-info">
+                    <h2 id="modal-movie-title"></h2>
+                    <p>Original Name: <span id="modal-movie-originalTitle"></span></p>
+                    <p>Release Year: <span id="modal-movie-release"></span></p>
+                    <p>Genres: <span id="modal-movie-genres"></span></p>
+                    <p>Runtime: <span id="modal-movie-runtime"></span> minutes</p>
+                    <p>Rating: <span id="modal-movie-rating"></span></p>
+                    <p>Votes: <span id="modal-movie-votes"></span></p>
+                </div>
+            </div>
         </div>
-    </div>
-    
+      </div>
 
     <div class="scroll-wrapper">
         <h3>Top 10 by Rating
@@ -51,7 +59,8 @@
                 <li class="movie-item">
                     <div class="movie-container">
                         <!-- Make the entire Movie container clickable -->
-                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150"onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', poster: '{{ movie.poster }}' })">
+                        <!-- Information from database to add into movie modal goes here -->
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150"onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', votes: '{{ movie.numVotes }}', release: '{{ movie.startYear }}', originalTitle: '{{ movie.originalTitle }}', runtimeMinutes: '{{ movie.runtimeMinutes }}', genres: '{{ movie.genres }}', poster: '{{ movie.poster }}' })">
                         <div class="movie-info">
                             <div class="movie-name">{{ movie.primaryTitle }}</div>
                             <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.averageRating }}</div>
@@ -74,7 +83,8 @@
                 <li class="movie-item">
                     <div class="movie-container">
                         <!-- Make the entire Movie container clickable -->
-                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150" onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', poster: '{{ movie.poster }}' })">
+                        <!-- Information from database to add into movie modal goes here -->
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150" onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', votes: '{{ movie.numVotes }}', release: '{{ movie.startYear }}', originalTitle: '{{ movie.originalTitle }}', runtimeMinutes: '{{ movie.runtimeMinutes }}', genres: '{{ movie.genres }}', poster: '{{ movie.poster }}' })">
                         <div class="movie-info">
                             <div class="movie-name">{{ movie.primaryTitle }}</div>
                             <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.numVotes }}</div>
@@ -98,7 +108,7 @@
                 <li class="movie-item" data-id="{{ movie.id }}">
                     <div class="movie-container">
                         <!-- Make the entire Movie container clickable -->
-                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150">
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150" >
                         <div class="movie-info">
                             <div class="movie-name">{{ movie.primaryTitle }}</div>
                             <div class="movie-rating">
@@ -161,11 +171,36 @@
             document.getElementById("genreDropdown").classList.remove("show");
         }
 
+        // Pull data from database for movie modal
+        function openModal(movie) {
+            document.getElementById('modal-movie-title').textContent = movie.title;
+            document.getElementById('modal-movie-rating').textContent = movie.rating;
+            document.getElementById('modal-movie-votes').textContent = movie.votes;
+            document.getElementById('modal-movie-release').textContent = movie.release;
+            document.getElementById('modal-movie-originalTitle').textContent = movie.originalTitle;
+            document.getElementById('modal-movie-runtime').textContent = movie.runtimeMinutes;
+            document.getElementById('modal-movie-genres').textContent = movie.genres;
+            document.getElementById('modal-movie-poster').src = movie.poster;
+            document.getElementById('movie-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('movie-modal').style.display = 'none';
+        }
+
         window.onclick = function(event) {
             if (!event.target.matches('.dropbtn') && !event.target.closest('.dropdown-content')) {
                 document.getElementById("genreDropdown").classList.remove("show");
             }
         };
+
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            const modal = document.getElementById('movie-modal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
             const params = new URLSearchParams(window.location.search);

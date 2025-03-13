@@ -32,19 +32,6 @@ function MovieList() {
     };
   }, []);
 
-  // Function to toggle dropdown visibility
-  const toggleDropdown = () => {
-    const dropdown = document.getElementById("genreDropdown");
-    dropdown.classList.toggle("show");
-  };
-
-  // Function to handle genre selection
-  const selectGenre = (genre) => {
-    setSelectedGenre(genre);
-    document.getElementById("dropdownButton").textContent = genre.charAt(0).toUpperCase() + genre.slice(1);
-    document.getElementById("genreDropdown").classList.remove("show");
-  };
-
   // Handle modal open
   const openModal = (movie) => {
     setModalMovie(movie);
@@ -55,12 +42,31 @@ function MovieList() {
     setModalMovie(null);
   };
 
+  // Handle click outside modal
+  const handleOutsideClick = (e) => {
+    if (e.target.classList.contains('modal')) {
+      closeModal();
+    }
+  };
+
+  // Function to toggle dropdown visibility
+  const toggleDropdown = () => {
+    const dropdown = document.getElementById("genreDropdown");
+    dropdown.classList.toggle("show");
+  };
+
+  // Function to handle genre selection
+  const selectGenre = (genre) => {
+    setSelectedGenre(genre);
+    setDropdownOpen(false); // Close dropdown after selecting
+  };
+
   return (
     <div>
       {/* Genre Dropdown */}
       <div className="dropdown">
         <button onClick={toggleDropdown} className="dropbtn" id="dropdownButton">Select Genre</button>
-        <div id="genreDropdown" className="dropdown-content">
+        <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`} id="genreDropdown">
           <a href="#" onClick={() => selectGenre('action')}>Action</a>
           <a href="#" onClick={() => selectGenre('comedy')}>Comedy</a>
           <a href="#" onClick={() => selectGenre('drama')}>Drama</a>
@@ -78,10 +84,10 @@ function MovieList() {
       </div>
 
       {/* Movie Modal */}
-      {modalMovie && (
-        <div id="movie-modal" className="modal" style={{ display: 'block' }}>
+      {modalMovie !== null && modalMovie.title && (
+        <div className="modal" onClick={handleOutsideClick}>
           <div className="modal-content">
-            <span id="close-modal" onClick={closeModal} className="close">&times;</span>
+            <span className="close" onClick={closeModal}>&times;</span>
             <h2>{modalMovie.title}</h2>
             <img src={modalMovie.poster} alt="Movie Poster" />
             <p>Rating: {modalMovie.rating}</p>

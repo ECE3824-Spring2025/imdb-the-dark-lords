@@ -451,7 +451,7 @@ li {
 
 /* Modal Background */
 .modal {
-    display: none;
+    display: flex;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -469,9 +469,26 @@ li {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    width: 300px;
+    width: 600px;
     position: relative;
 }
+
+.modal-layout {
+    display: flex;
+    align-items: flex-start;
+}
+
+#modal-movie-poster {
+    width: 200px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.modal-info {
+    flex: 1;
+    text-align: left;
+}
+
 
 /* Close Button */
 .close {
