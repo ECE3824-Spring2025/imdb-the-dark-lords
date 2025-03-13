@@ -4,9 +4,15 @@ import requests
 #import sort_data
 #import favs_list
 from database_connect import cursor
+from flask_caching import Cache
 import Movie
 fav_movies = []
 app = Flask(__name__) # definng flask app
+
+app.config['CACHE_TYPE'] = 'SimpleCache'  #use in-memory caching
+app.config['CACHE_DEFAULT_TIMEOUT'] = 600  #cache expires after 10 minutes
+cache = Cache(app)
+
 
 OMDB_API_KEY = 'e6d88f23'
 
@@ -16,82 +22,52 @@ def get_movie_poster(imdb_id):
     data = response.json()
     return data.get('Poster', 'https://www.omdbapi.com/?i=tt3896198&apikey=e6d88f23')
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
+@cache.cached(timeout=600, key_prefix='top_movies')
+def fetch_top_movies():
     movies = []
-    query = ("SELECT * FROM `database`" "ORDER BY `COL 10` DESC")
+    query = "SELECT * FROM `database` ORDER BY `COL 10` DESC"
     cursor.execute(query)
     rows = cursor.fetchall()
 
     for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
         movies.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
 
+    return movies
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    movies = fetch_top_movies()
     for movie in movies[:10]:
         print(movie)
+
+@cache.memoize(timeout=600)  # Cache based on function arguments
+def fetch_movies_by_genre(genre):
+    movies_rating = []
+    movies_votes = []
+
+    query_rating = f"SELECT * FROM `database` WHERE FIND_IN_SET('{genre}', `genres`) > 0 ORDER BY `averageRating` DESC LIMIT 10"
+    query_votes = f"SELECT * FROM `database` WHERE FIND_IN_SET('{genre}', `genres`) > 0 ORDER BY `numVotes` DESC LIMIT 10"
+
+    cursor.execute(query_rating)
+    rows = cursor.fetchall()
+    for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+        movies_rating.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+    cursor.execute(query_votes)
+    rows = cursor.fetchall()
+    for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
+        movies_votes.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
+
+    return movies_rating, movies_votes
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index_func():
     genre = request.args.get('genre')  # 'comedy', 'drama', 'action', or None
-    rating_data = []
-    likes_data = []
-    favs_data = []
+    rating_data, likes_data = [], []
 
-    #favs_data = [favs_list.fav_movies]
-
-    if genre == 'comedy':
-        movies_rating = []
-        movies_votes = []
-        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `genres`) > 0 ORDER BY `averageRating` DESC LIMIT 10")
-        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Comedy', `genres`) > 0 ORDER BY `numVotes` DESC LIMIT 10")
-        cursor.execute(query_rating)
-        rows = cursor.fetchall()
-        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
-            movies_rating.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
-
-        cursor.execute(query_votes)
-        rows = cursor.fetchall()
-        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
-            movies_votes.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
-
-        rating_data = movies_rating
-        likes_data  = movies_votes
-
-    elif genre == 'drama':
-        movies_rating = []
-        movies_votes = []
-        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `genres`) > 0 ORDER BY `averageRating` DESC LIMIT 10")
-        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Drama', `genres`) > 0 ORDER BY `numVotes` DESC LIMIT 10")
-        cursor.execute(query_rating)
-        rows = cursor.fetchall()
-        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
-            movies_rating.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
-
-        cursor.execute(query_votes)
-        rows = cursor.fetchall()
-        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
-            movies_votes.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
-
-        rating_data = movies_rating
-        likes_data  = movies_votes
-
-
-    elif genre == 'action':
-        movies_rating = []
-        movies_votes = []
-        query_rating = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `genres`) > 0 ORDER BY `averageRating` DESC LIMIT 10")
-        query_votes = ("SELECT * FROM `database` WHERE FIND_IN_SET('Action', `genres`) > 0 ORDER BY `numVotes` DESC LIMIT 10")
-        cursor.execute(query_rating)
-        rows = cursor.fetchall()
-        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
-            movies_rating.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
-
-        cursor.execute(query_votes)
-        rows = cursor.fetchall()
-        for tconst, _, primaryTitle, originalTitle, isAdult, startYear, _, runtimeMinutes, genres, averageRating, numVotes in rows:
-            movies_votes.append(Movie.Movie(tconst, primaryTitle, originalTitle, isAdult, startYear, runtimeMinutes, genres, averageRating, numVotes))
-
-        rating_data = movies_rating
-        likes_data  = movies_votes
+    if genre:
+        rating_data, likes_data = fetch_movies_by_genre(genre.capitalize())
 
     for movie in rating_data:
         movie.poster = get_movie_poster(movie.tconst)
@@ -99,13 +75,8 @@ def index_func():
     for movie in likes_data:
         movie.poster = get_movie_poster(movie.tconst)
 
-    return render_template(
-        "index.html", 
-        genre=genre, 
-        rating_data=rating_data, 
-        likes_data=likes_data,
-        favs_data = favs_data
-    )
+    return render_template("index.html", genre=genre, rating_data=rating_data, likes_data=likes_data, favs_data=fav_movies)
+
 
 @app.route('/add_favorite', methods=['POST'])
 def add_favorite():
