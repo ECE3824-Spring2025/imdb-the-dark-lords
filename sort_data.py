@@ -28,3 +28,4 @@ sorted_ListWithLikesAction_NoRepeats = sorted(ListWithLikesAction_NoRepeats, key
 ListWithLikesComedy_NoRepeats = {m['id']: m for m in movie_data.ListWithLikesComedy}.values()
 sorted_ListWithLikesComedy_NoRepeats = sorted(ListWithLikesComedy_NoRepeats, key=lambda x: parse_votes(x['votes']), reverse=True)
 
+print(sorted_ListWithLikesAction_NoRepeats)
