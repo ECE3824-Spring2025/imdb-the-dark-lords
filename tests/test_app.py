@@ -1,3 +1,4 @@
+#Usage: pytest -v tests/test_app.py
 import pytest
 from app import app, fav_movies
 
