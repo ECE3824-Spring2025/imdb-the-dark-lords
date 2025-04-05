@@ -2,11 +2,11 @@ import mysql.connector
 import Movie
 
 config = {
-  'user': 'root',
-  'password': 'root',
-  'host': 'localhost',    # Hostname only
+  'user': 'admin',
+  'password': 'IMDB123456789',
+  'host': 'darklord-database.cfwkee8cwe1v.us-east-1.rds.amazonaws.com',    # Hostname only
   'port': 3306,           # Default MySQL port for MAMP is 8889
-  'database': 'movies_data',
+  'database': 'IMDB',
   'raise_on_warnings': True,
 }
 
@@ -17,9 +17,9 @@ movies = []
 
 query = ("SELECT * FROM `database`" "ORDER BY `averageRating` DESC")
 
-# if link.is_connected():
-#     print("✅ Successfully connected to the 'movies_data' database.")
-# else:
+if link.is_connected():
+  print("✅ Successfully connected to the 'movies_data' database.")
+else:
 #     print("❌ Connection failed.")
 
 cursor.execute(query)
