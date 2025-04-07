@@ -33,6 +33,24 @@
         <input type="submit" value="Submit">
     </form>
 
+    <div id="movie-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-layout">
+                <img id="modal-movie-poster" src="" alt="Movie Poster" width="200">
+                <div class="modal-info">
+                    <h2 id="modal-movie-title"></h2>
+                    <p>Original Name: <span id="modal-movie-originalTitle"></span></p>
+                    <p>Release Year: <span id="modal-movie-release"></span></p>
+                    <p>Genres: <span id="modal-movie-genres"></span></p>
+                    <p>Runtime: <span id="modal-movie-runtime"></span> minutes</p>
+                    <p>Rating: <span id="modal-movie-rating"></span></p>
+                    <p>Votes: <span id="modal-movie-votes"></span></p>
+                </div>
+            </div>
+        </div>
+      </div>
+
     <div class="scroll-wrapper">
         <h3>Top 10 by Rating
         <div class="scroll-container">
@@ -40,11 +58,13 @@
                 {% for movie in rating_data %}
                 <li class="movie-item">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                        <!-- Make the entire Movie container clickable -->
+                        <!-- Information from database to add into movie modal goes here -->
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150"onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', votes: '{{ movie.numVotes }}', release: '{{ movie.startYear }}', originalTitle: '{{ movie.originalTitle }}', runtimeMinutes: '{{ movie.runtimeMinutes }}', genres: '{{ movie.genres }}', poster: '{{ movie.poster }}' })">
                         <div class="movie-info">
-                            <div class="movie-name">{{ movie.name }}</div>
-                            <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.rating }}</div>
-                            <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">
+                            <div class="movie-name">{{ movie.primaryTitle }}</div>
+                            <div class="movie-rating"><span class="star">&#9733;</span> {{ movie.averageRating }}</div>
+                            <button class="add-favorite heart-button" data-id="{{ movie.tconst }}" data-name="{{ movie.primaryTitle }}" data-rating="{{ movie.averageRating }}">
                                 <i class="far fa-heart"></i>
                             </button>
                         </div>
@@ -62,11 +82,13 @@
                 {% for movie in likes_data %}
                 <li class="movie-item">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                        <!-- Make the entire Movie container clickable -->
+                        <!-- Information from database to add into movie modal goes here -->
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150" onclick="openModal({ title: '{{ movie.primaryTitle }}', rating: '{{ movie.averageRating }}', votes: '{{ movie.numVotes }}', release: '{{ movie.startYear }}', originalTitle: '{{ movie.originalTitle }}', runtimeMinutes: '{{ movie.runtimeMinutes }}', genres: '{{ movie.genres }}', poster: '{{ movie.poster }}' })">
                         <div class="movie-info">
-                            <div class="movie-name">{{ movie.name }}</div>
-                            <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.votes }}</div>
-                            <button class="add-favorite heart-button" data-id="{{ movie.id }}" data-name="{{ movie.name }}" data-rating="{{ movie.rating }}">
+                            <div class="movie-name">{{ movie.primaryTitle }}</div>
+                            <div class="movie-votes"><span class="star">&#9733;</span> {{ movie.numVotes }}</div>
+                            <button class="add-favorite heart-button" data-id="{{ movie.tconst }}" data-name="{{ movie.primaryTitle }}" data-rating="{{ movie.numVotes }}">
                                 <i class="far fa-heart"></i>
                             </button>
                         </div>
@@ -85,12 +107,13 @@
                 {% for movie in favs_data %}
                 <li class="movie-item" data-id="{{ movie.id }}">
                     <div class="movie-container">
-                        <img src="{{ movie.poster }}" alt="{{ movie.name }} poster" width="150">
+                        <!-- Make the entire Movie container clickable -->
+                        <img src="{{ movie.poster }}" alt="{{ movie.primaryTitle }} poster" width="150" >
                         <div class="movie-info">
-                            <div class="movie-name">{{ movie.name }}</div>
+                            <div class="movie-name">{{ movie.primaryTitle }}</div>
                             <div class="movie-rating">
-                                <span class="star">&#9733;</span> {{ movie.votes }} 
-                                <span class="star">&#9733;</span> {{ movie.rating }}
+                                <span class="star">&#9733;</span> {{ movie.numVotes }} 
+                                <span class="star">&#9733;</span> {{ movie.averageRating }}
                             </div>
                             <button class="remove-favorite" data-id="{{ movie.id }}">Remove</button>
                         </div>
@@ -105,6 +128,39 @@
     </div>
 
     <script>
+    document.querySelectorAll(".movie-item").forEach(item => {
+        const movieName = item.querySelector(".movie-name"); // Get the movie name element
+        const moviePoster = item.querySelector("img");
+
+        // Create overlay text element
+        const overlay = document.createElement("div");
+        overlay.classList.add("overlay-text");
+        overlay.textContent = movieName.textContent; // Set the movie name
+
+        // Wrap the image in a container if not already
+        let posterContainer = item.querySelector(".poster-container");
+        if (!posterContainer) {
+            posterContainer = document.createElement("div");
+            posterContainer.classList.add("poster-container");
+            moviePoster.parentNode.insertBefore(posterContainer, moviePoster);
+            posterContainer.appendChild(moviePoster);
+        }
+        
+        posterContainer.appendChild(overlay); // Add overlay inside the poster container
+
+        item.addEventListener("mouseenter", function () {
+            moviePoster.style.opacity = "0.5"; // Reduce opacity of poster
+            overlay.style.opacity = "1"; // Show movie name
+        });
+
+        item.addEventListener("mouseleave", function () {
+            moviePoster.style.opacity = "1"; // Reset opacity
+            overlay.style.opacity = "0"; // Hide movie name
+        });
+    });
+
+
+
         function toggleDropdown() {
             document.getElementById("genreDropdown").classList.toggle("show");
         }
@@ -115,11 +171,36 @@
             document.getElementById("genreDropdown").classList.remove("show");
         }
 
+        // Pull data from database for movie modal
+        function openModal(movie) {
+            document.getElementById('modal-movie-title').textContent = movie.title;
+            document.getElementById('modal-movie-rating').textContent = movie.rating;
+            document.getElementById('modal-movie-votes').textContent = movie.votes;
+            document.getElementById('modal-movie-release').textContent = movie.release;
+            document.getElementById('modal-movie-originalTitle').textContent = movie.originalTitle;
+            document.getElementById('modal-movie-runtime').textContent = movie.runtimeMinutes;
+            document.getElementById('modal-movie-genres').textContent = movie.genres;
+            document.getElementById('modal-movie-poster').src = movie.poster;
+            document.getElementById('movie-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('movie-modal').style.display = 'none';
+        }
+
         window.onclick = function(event) {
             if (!event.target.matches('.dropbtn') && !event.target.closest('.dropdown-content')) {
                 document.getElementById("genreDropdown").classList.remove("show");
             }
         };
+
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            const modal = document.getElementById('movie-modal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
             const params = new URLSearchParams(window.location.search);
@@ -151,8 +232,9 @@
                     contentType: 'application/json',
                     data: JSON.stringify(movieData),
                     success: function (response) {
-                        if (response.status === 'success') {
+                        if (response.status === 'success' && response.append === true) {
                             $('#no-favs').remove();
+                            console.log(response.append);
                             $('#favorites-list').append(`
                                 <li class="movie-item">
                                     <div class="movie-container">
