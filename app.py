@@ -84,13 +84,19 @@ def root():
 @app.route('/', methods=['GET', 'POST'])
 def index_func():
     isnew = False
-    if "username" in session:    
-        users = load_users()  # get the current list of users
-        if users[session["username"]]["new_acct"]==True: # CHECKS IF ITS NEW ACCOUNT
-            #_________ DO SOMETHING ________
-            users[session["username"]]["new_acct"] = False # changes account to false
-            save_users(users)
+
+    if "username" in session:   
+
+        # return row of user 
+        row = load_user(session["username"])  
+
+        # check if this is a new session 
+        if row[0][2]==1: # CHECKS IF ITS NEW ACCOUNT   
+
+            # replace with not new 
+            save_user(row[0][0],row[0][1],0)
             isnew = True
+        
         genre = request.args.get('genre')  # get genre from query string
         rating_data, likes_data = [], []  # initialize data lists
         if genre:

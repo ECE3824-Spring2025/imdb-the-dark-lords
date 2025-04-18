@@ -1,36 +1,66 @@
 from werkzeug.security import generate_password_hash, check_password_hash  # for securely hashing and verifying passwords
-import json  # for reading and writing user data as json
+from database_connect import cursor
+from database_connect import link
 
-# function to load users from a json file
-def load_users():
-    try:
-        with open('users.json', 'r') as f:  # open the users file in read mode
-            return json.load(f)  # load and return the json data
-    except FileNotFoundError:  # if the file doesn't exist
-        return {}  # return an empty dictionary
+# function returns all rows from for a user
+# RETURNS LIST OF TUPLE
+# INDEX row[0][N] 
+def load_user(user):
 
-# function to save users to a json file
-def save_users(users):
-    with open('users.json', 'w') as f:  # open the users file in write mode
-        json.dump(users, f)  # write the users dictionary to the file
+    # query to select entire users table
+    query = (f"SELECT * FROM `users` WHERE `user` = \"{user}\"")
+    cursor.execute(query) 
+
+    # return users table from cursor
+    row = cursor.fetchall() 
+    return row
+
+# commits a user to the SQL table
+def save_user(username, password, isnew):
+
+    # insert with SQL query 
+    query = (f"REPLACE INTO `users` (user, password, isnew) VALUES (\"{username}\",\"{password}\",\"{isnew}\")")
+    cursor.execute(query) 
+
+    # save database
+    link.commit()
 
 # function to register a new user
 def register_user(username, password):
-    users = load_users()  # get the current list of users
 
-    if username in users:  # check if the username is already taken
-        return False  # registration fails if the user exists
+    # rewrite code to check prexisting list with the find command
+    row = load_user(username) 
 
-    hashed_pw = generate_password_hash(password)  # hash the user's password
-    users[username] = {'password': hashed_pw, 'new_acct':True}  # store the hashed password under the username
-    save_users(users)  # save the updated users list
-    return True  # registration was successful
+    # exit if user exists
+    if row:
+        return False
+    
+    # create user if it down not exist
+    else:
 
-# function to authenticate a user during login
+        # create password from hash 
+        hashed_pw = generate_password_hash(password)    
+
+        # call save function
+        save_user(username,hashed_pw,1)                 
+
+        # exit gracefully 
+        return True  
+
+# authenticate by returning user info from SQL table
 def authenticate_user(username, password):
-    users = load_users()  # load the current users
 
-    user = users.get(username)  # get the user data for the given username
-    if user and check_password_hash(user['password'], password):  # check if the password is correct
-        return True  # return true if login is successful
-    return False  # return false if login fails
+    # call user function 
+    row = load_user(username)
+
+    # check if user exists 
+    if row:
+
+        # perform password check
+        if check_password_hash(row[0][1], password): 
+
+            # authenticate true if correct
+            return True  
+
+    # return false if password is wrong or user does not exist   
+    return False  
