@@ -32,8 +32,13 @@ def get_movie_poster(imdb_id):
     data = response.json() # parse response json
     return data.get('Poster', 'https://www.omdbapi.com/?i=tt3896198&apikey=e6d88f23') # return poster or fallback
 
+<<<<<<< HEAD
 # cache this functions result for 10 minutes under a fixed key
 @cache.cached(timeout=600, key_prefix='top_movies')
+=======
+@cache.cached(timeout=600, key_prefix='top_movies') #caching top movies data for 10 mins
+
+>>>>>>> 495bae2 (Edits from friday class)
 def fetch_top_movies():
     movies = [] # list to hold movie objects
     query = ("SELECT * FROM `database`" "ORDER BY `averageRating` DESC") # sql query to get top rated movies
