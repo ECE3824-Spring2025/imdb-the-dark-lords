@@ -15,8 +15,13 @@
         <h1>IMDB</h1>
     </div>
 
+
+    <!-- Your main page content here -->
     <h1>The Dark Lord Dungeon</h1>
     <h2>Genre Selected: {{ genre }}</h2>
+        {% if new_account %}
+            Welcome, {{ session['username'] }}!
+        {% endif %}
 
     <form method="GET" action="#">
         <div class="dropdown">
@@ -126,7 +131,7 @@
             </ul>
         </div>
     </div>
-
+    
     <script>
     document.querySelectorAll(".movie-item").forEach(item => {
         const movieName = item.querySelector(".movie-name"); // Get the movie name element

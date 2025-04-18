@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%; 
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="submit"], .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            padding: 10px;
+        }
+        .form-group input[type="submit"]:hover, .form-group button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+        .success-message {
+            color: green;
+            text-align: center;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+  <div class="container">  <!-- start the container div for the form -->
+    <h2>Register</h2>  <!-- display the page title -->
+
+    {% with messages = get_flashed_messages() %}  <!-- check for any flashed messages (errors/success) -->
+        {% if messages %}  <!-- if there are any messages -->
+            <div class="error-message">  <!-- start error message div -->
+                {% for message in messages %}  <!-- loop through each message -->
+                    <p>{{ message }}</p>  <!-- display each message in a paragraph -->
+                {% endfor %}
+            </div>  <!-- end error message div -->
+        {% endif %}
+    {% endwith %}
+
+    <form method="post">  <!-- start the form, method is POST to send data -->
+        <div class="form-group">  <!-- start the form group for username input -->
+            <input type="text" name="username" placeholder="Username" required>  <!-- input for username, required field -->
+        </div>
+        <div class="form-group">  <!-- start the form group for password input -->
+            <input type="password" name="password" placeholder="Password" required>  <!-- input for password, required field -->
+        </div>
+        <div class="form-group">  <!-- start the form group for submit button -->
+            <input type="submit" value="Register">  <!-- submit button for the form -->
+        </div>
+    </form>
+
+    <div class="form-group">  <!-- start a new form group for the login link -->
+        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>  <!-- provide a link to the login page -->
+    </div>
+</div>
+
+</body>
+</html>  <!-- close the HTML document -->
+
