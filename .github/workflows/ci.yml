@@ -51,9 +51,10 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             sudo yum update -y
+            sudo yum install -y git
             sudo yum install -y docker
             sudo service docker start
-            sudo usermod -a -G docker $USER
+            sudo usermod -a -G docker ec2-user
             cd ~/flask-app
             sudo docker stop flask-app || true
             sudo docker rm flask-app || true
