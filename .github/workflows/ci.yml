@@ -52,6 +52,8 @@ jobs:
           timeout: 1800s
           command_timeout: 1800s
           script: |
+            sudo docker builder prune -af
+            sudo docker system  prune -af --volumes || true
             sudo yum update -y
             sudo yum install -y git
             sudo yum install -y docker
