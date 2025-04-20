@@ -49,8 +49,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          timeout: 900s
-          command_timeout: 900s
+          timeout: 1800s
+          command_timeout: 1800s
           script: |
             sudo yum update -y
             sudo yum install -y git
