@@ -1,5 +1,5 @@
-# Dockerfile  (only the two lines changed)
-FROM python:3.12-slim           # ← switch to 3.12
+# ---- Dockerfile ----
+FROM python:3.12-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
