@@ -5,14 +5,13 @@ FROM python:3.13.1-slim
 ENV DEBIAN_FRONTEND=noninteractive
  
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    gcc \
-    libffi-dev \
-    libssl-dev \
-    default-libmysqlclient-dev \
-    python3-dev \
-&& rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gcc g++ make \
+        libssl-dev libffi-dev \
+        libmariadb-dev-compat libmariadb-dev \
+    && rm -rf /var/lib/apt/lists/*
+
  
 # Set the working directory inside the container
 WORKDIR /app
