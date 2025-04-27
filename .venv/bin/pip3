@@ -1,4 +1,4 @@
-#!/Users/zacarylouis/Git/imdb-the-dark-lords/.venv/bin/python3
+#!/Users/zacarylouis/COMP3/imdb-the-dark-lords/.venv/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -4,36 +4,33 @@ import json  # for reading and writing user data as json
 from app import app  # import the flask app instance from app.py
 from flask import session  # import session to manage user login state
 from utilities import *
-# route for the login page
+
+# route for the login and registration page (combined page)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':  # if the form was submitted
-        username = request.form['username']  # get the username from the form
-        password = request.form['password']  # get the password from the form
+        if 'signup' in request.form:  # if signup hidden input is present, it's a registration attempt
+            username = request.form['username']  # get the username from the form
+            password = request.form['password']  # get the password from the form
 
-        if authenticate_user(username, password):  # check if login is valid
-            session['username'] = username  # store the username in session
-            flash('login successful!')  # show a success message
-            return redirect(url_for('home'))  # redirect to the home page
-        else:
-            flash('invalid username or password.')  # show an error message
+            if register_user(username, password):  # try to register the user
+                flash('registration successful! please log in.')  # show a success message
+                return redirect(url_for('login'))  # redirect back to login form
+            else:
+                flash('username already taken.')  # show an error if username exists
+                return redirect(url_for('login'))  # stay on the login page
+
+        else:  # otherwise, it's a login attempt
+            username = request.form['username']  # get the username from the form
+            password = request.form['password']  # get the password from the form
+
+            if authenticate_user(username, password):  # check if login is valid
+                session['username'] = username  # store the username in session
+                return redirect(url_for('home'))  # redirect to the home page
+            else:
+                flash('invalid username or password.')  # show an error message
     
-    return render_template('login.html')  # render the login page
-
-# route for the registration page
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':  # if the form was submitted
-        username = request.form['username']  # get the username from the form
-        password = request.form['password']  # get the password from the form
-
-        if register_user(username, password):  # try to register the user
-            flash('registration successful! please log in.')  # show a success message
-            return redirect(url_for('login'))  # redirect to the login page
-        else:
-            flash('username already taken.')  # show an error if the username exists
-    
-    return render_template('register.html')  # render the registration page
+    return render_template('login.html')  # render the login/register combined page
 
 # route for the homepage
 @app.route('/')
