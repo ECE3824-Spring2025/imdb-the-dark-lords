@@ -13,7 +13,7 @@
         0% { background-position: 0 0; }
         100% { background-position: 500px 500px; }
     }
-    
+
     body {
       margin: 0;
       padding: 0;
@@ -28,15 +28,7 @@
       position: relative;
     }
 
-    .wave {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(to top, #3c57f5, #4e77fc);
-      border-top-left-radius: 50% 20%;
-      border-top-right-radius: 50% 20%;
-    }
+    
 
     .container {
       background-color: #1e1e1e;
@@ -144,12 +136,21 @@
       from { opacity: 0; transform: translateY(20px);}
       to { opacity: 1; transform: translateY(0);}
     }
+
+    #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #121212; /* match your background color */
+        z-index: 0; /* Behind the container */
+        }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+    <div id="particles-js"></div>
+    <div class="container">
 
     <div class="toggle-buttons">
       <button id="loginToggle" class="active">Login</button>
@@ -204,6 +205,77 @@
   </div>
 
   <div class="wave"></div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS('particles-js', {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#ffffff"
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": false
+        },
+        "size": {
+          "value": 3,
+          "random": true
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#ffffff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 4,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out"
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "repulse"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          }
+        },
+        "modes": {
+          "repulse": {
+            "distance": 100,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          }
+        }
+      },
+      "retina_detect": true
+    });
+  </script>
 
   <script>
     const loginToggle = document.getElementById('loginToggle');

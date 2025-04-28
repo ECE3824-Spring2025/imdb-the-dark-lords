@@ -489,6 +489,9 @@ li {
     text-align: left;
 }
 
+input[type="submit"] {
+    display: none;
+}
 
 /* Close Button */
 .close {
