@@ -4,7 +4,7 @@ import requests
 from database_connect import cursor
 from flask_caching import Cache
 import Movie
-from routes import *
+
 from utilities import *
 
 app = Flask(__name__)  # define flask app
