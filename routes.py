@@ -24,10 +24,10 @@ def login():
             password = request.form['password']  # get the password from the form
 
             if register_user(username, password):  # try to register the user
-                flash('registration successful! please log in.')  # show a success message
+                flash('Registration successful! Please log in.')  # show a success message
                 return redirect(url_for('login'))  # redirect back to login form
             else:
-                flash('username already taken.')  # show an error if username exists
+                flash('Username already taken.')  # show an error if username exists
                 return redirect(url_for('login'))  # stay on the login page
 
         else:  # otherwise, it's a login attempt
@@ -36,7 +36,7 @@ def login():
 
             if authenticate_user(username, password):  # check if login is valid
                 session['username'] = username  # store the username in session
-                return redirect(url_for('home'))  # redirect to the home page
+                return redirect(url_for('index_func'))  # redirect to the home page
             else:
                 flash('invalid username or password.')  # show an error message
     
@@ -47,6 +47,7 @@ def login():
 def home():
     if 'username' not in session:  # check if the user is not logged in
         return redirect(url_for('login'))  # redirect them to login
+<<<<<<< HEAD
     return render_template("index.html", username=session['username'])  # render homepage with username
 
 @app.route('/favorite', methods=['POST'])
@@ -96,3 +97,6 @@ def get_favorites():
         })
 
     return jsonify(favorites_list)
+=======
+    return redirect(url_for('index_func'))  # if logged in, go to home page
+>>>>>>> c17e62238f717f58d863239bee8ad16513d563ca

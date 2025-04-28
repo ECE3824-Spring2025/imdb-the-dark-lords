@@ -4,7 +4,7 @@ import requests
 from database_connect import link, cursor
 from flask_caching import Cache
 import Movie
-from routes import *
+
 from utilities import *
 
 app = Flask(__name__)  # define flask app
@@ -16,7 +16,7 @@ app.secret_key = 'your_secret_key'  # secret key for session management and secu
 from routes import *
 
 if __name__ == "__main__":
-    app.run(debug=True)  # run the app in debug mode for development
+    app.run(host="0.0.0.0", port=5000, debug=True)  # run the app in debug mode for development
 
 fav_movies = []  # list to store favorite movies
 
