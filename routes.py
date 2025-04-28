@@ -4,6 +4,16 @@ import json  # for reading and writing user data as json
 from app import app  # import the flask app instance from app.py
 from flask import session  # import session to manage user login state
 from utilities import *
+from functools import wraps
+from flask import redirect, url_for, session
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # route for the login and registration page (combined page)
 @app.route('/login', methods=['GET', 'POST'])
@@ -38,3 +48,64 @@ def home():
     if 'username' not in session:  # check if the user is not logged in
         return redirect(url_for('login'))  # redirect them to login
     return redirect(url_for('index_func'))  # if logged in, go to home page
+
+@app.route('/favorite', methods=['POST'])
+@login_required
+def favorite_movie():
+    data = request.json
+    movie_id = data['movie_id']
+    title = data['title']
+    poster_url = data['poster_url']
+
+    query = "INSERT INTO favorites (user_id, movie_id, title, poster_url) VALUES (%s, %s, %s, %s)"
+    values = (session["username"], movie_id, title, poster_url)
+
+    cursor.execute(query, values)
+    link.commit()
+
+    return jsonify({'message': 'Movie added to favorites'})
+
+@app.route('/unfavorite', methods=['POST'])
+@login_required
+def unfavorite_movie():
+    movie_id = request.json['movie_id']
+
+    query = "DELETE FROM favorites WHERE user_id = %s AND movie_id = %s"
+    values = (session["username"], movie_id)
+
+    cursor.execute(query, values)
+    link.commit()
+
+    return jsonify({'message': 'Movie removed from favorites'})
+
+@app.route('/favorites', methods=['GET'])
+@login_required
+def get_favorites():
+    query = "SELECT movie_id, title, poster_url FROM favorites WHERE user_id = %s"
+    values = (session["username"],)
+
+    cursor.execute(query, values)
+    favorites = cursor.fetchall()
+
+    favorites_list = []
+    for movie_id, title, poster_url in favorites:
+        favorites_list.append({
+            'movie_id': movie_id,
+            'title': title,
+            'poster_url': poster_url
+        })
+
+    return jsonify(favorites_list)
+
+@app.route('/logout')
+@login_required
+def logout():
+    session.clear()  # Clear all session data (logs the user out)
+    flash('You have been logged out.')
+    return redirect(url_for('login'))  # Redirect back to login page
+
+@app.route('/logout', methods=['POST'])
+def logout_user():  # different function name!
+    session.clear()
+    return redirect(url_for('home'))
+

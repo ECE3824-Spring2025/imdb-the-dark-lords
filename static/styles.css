@@ -501,3 +501,36 @@ input[type="submit"] {
     font-size: 24px;
     cursor: pointer;
 }
+
+.banner {
+    position: relative;
+}
+
+.user-info {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* smaller gap between text and button */
+    font-size: 16px;
+    color: black; /* text color black */
+    z-index: 1000;
+    background-color: white; /* white background */
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.logout-button {
+    background-color: #e60000;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logout-button:hover {
+    background-color: #cc0000;
+}
