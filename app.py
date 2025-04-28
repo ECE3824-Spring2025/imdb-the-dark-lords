@@ -1,7 +1,7 @@
 # app.py
 from flask import Flask, render_template, request, jsonify, session
 import requests
-from database_connect import cursor
+from database_connect import link, cursor
 from flask_caching import Cache
 import Movie
 from routes import *
